@@ -111,14 +111,14 @@ void CircularArray<T>::push_back(T data)
     else
         back=next(back);
     array[back]=data;
-    //cout<<"New size is: "<<size()<<endl;
+    /*cout<<"New size is: "<<size()<<endl;
     int index=front;
     for(int i=0;i<size();i++)
     {
         cout<<array[index]<<" ";
         index=next(index);
     }
-    cout<<"ga"<<endl;
+    cout<<"ga"<<endl;*/
 
 }
 
@@ -130,14 +130,14 @@ void CircularArray<T>::push_front(T data)
     else
         front=prev(front);
     array[front]=data;
-    //cout<<"New size is: "<<size()<<endl;
+   /* cout<<"New size is: "<<size()<<endl;
     int index=front;
     for(int i=0;i<size();i++)
     {
         cout<<array[index]<<" ";
         index=next(index);
     }
-    cout<<"ga"<<endl;
+    cout<<"ga"<<endl;*/
 }
 
 template <class T>
