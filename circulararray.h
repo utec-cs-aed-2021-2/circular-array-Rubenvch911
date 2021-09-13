@@ -1,17 +1,19 @@
 #include <iostream>
 using namespace std;
 
-void swap(int *xp, int *yp) 
-{ 
-    int temp = *xp; 
-    *xp = *yp; 
-    *yp = temp; 
-} 
-  
+void swap(int *xp, int *yp)
+{
+    int temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
 template <class T>
 class CircularArray
 {
 private:
+
+protected:
     T *array;
     int capacity;
     int back, front;
@@ -33,9 +35,10 @@ public:
     void sort();
     bool is_sorted();
     void reverse();
+    void resize();
     string to_string(string sep=" ");
 
-private:
+protected:
     int next(int);
     int prev(int);
 };
@@ -108,6 +111,11 @@ void CircularArray<T>::push_back(T data)
 {
     if(is_empty() == true)
         front=0,back=0;
+    else if(is_full()==true)
+    {
+        resize();
+        back= next(back);
+    }
     else
         back=next(back);
     array[back]=data;
@@ -127,17 +135,60 @@ void CircularArray<T>::push_front(T data)
 {
     if(is_empty() == true)
         front=0,back=0;
+    else if(is_full()==true)
+    {
+        resize();
+        front= prev(front);
+    }
     else
         front=prev(front);
     array[front]=data;
-   /* cout<<"New size is: "<<size()<<endl;
-    int index=front;
-    for(int i=0;i<size();i++)
-    {
-        cout<<array[index]<<" ";
-        index=next(index);
+    /* cout<<"New size is: "<<size()<<endl;
+     int index=front;
+     for(int i=0;i<size();i++)
+     {
+         cout<<array[index]<<" ";
+         index=next(index);
+     }
+     cout<<"ga"<<endl;*/
+}
+template<typename T>
+void CircularArray<T>::insert(T data, int pos) {
+    if (is_empty() == true) {
+        push_back(data);
+
+    }else if(is_full() ==true){
+        resize(array);
+        if (pos > size() - 1) {
+            push_back(data);
+        } else if (pos < size() - 1) {
+            auto index = back;
+
+            while (index != pos) {
+                array[next(index)] = array[index];
+                index = prev(index);
+            }
+            array[pos] = data;
+        }
     }
-    cout<<"ga"<<endl;*/
+    else {
+        if (pos > back) {
+            push_back(data);
+        } else if (pos < back) {
+            auto index = back;
+            while (index != pos) {
+                array[next(index)] = array[index];
+                index = prev(index);
+            }
+            array[pos] = data;
+        }
+    }
+}
+
+template<typename T>
+void CircularArray<T>::clear()
+{
+    front=back=-1;
 }
 
 template <class T>
@@ -179,36 +230,36 @@ int CircularArray<T>::next(int index)
 template <typename T>
 bool CircularArray<T>::is_sorted()
 {
-    int i, j; 
-    for (i = 0; i < size()-1; i++) 
-     {     
-         int indexj=front;
-    for (j = 0; j < size()-i-1; j++) 
+    int i, j;
+    for (i = 0; i < size()-1; i++)
     {
-        if (array[indexj] > array[next(indexj)]) 
-            return false;
-        indexj=next(indexj);
-     }
+        int indexj=front;
+        for (j = 0; j < size()-i-1; j++)
+        {
+            if (array[indexj] > array[next(indexj)])
+                return false;
+            indexj=next(indexj);
+        }
 
-     }
-    return true; 
+    }
+    return true;
 }
 
 template <typename T>
 void CircularArray<T>::sort()
 {
-    int i, j; 
-    for (i = 0; i < size()-1; i++) 
-     {     
-         int indexj=front;
-    for (j = 0; j < size()-i-1; j++) 
+    int i, j;
+    for (i = 0; i < size()-1; i++)
     {
-        if (array[indexj] > array[next(indexj)]) 
-            swap(&array[indexj],&array[next(indexj)]);
-        indexj=next(indexj);
-     }
+        int indexj=front;
+        for (j = 0; j < size()-i-1; j++)
+        {
+            if (array[indexj] > array[next(indexj)])
+                swap(&array[indexj],&array[next(indexj)]);
+            indexj=next(indexj);
+        }
 
-     }
+    }
 }
 template<typename T>
 void CircularArray<T>::reverse()
@@ -222,10 +273,29 @@ void CircularArray<T>::reverse()
         indexb=prev(indexb);
     }
 }
+template<typename T>
+void CircularArray<T>::resize()
+{
+    int newsz = capacity*2;
+    T* newArr = new int[newsz];
+    auto index=front;
+    for(int i=0;i<size();i++)
+    {
+        newArr[i]=array[index];
+        index=next(index);
+    }
+    int oldsz=size();
+    capacity=newsz;
+    delete [] array ;
+    array = newArr;
+    front=0;
+    back=oldsz-1;
+
+}
+
 
 template <class T>
-string CircularArray<T>::to_string(string sep)
-{
+string CircularArray<T>::to_string(string sep) {
     string result = "";
     for (int i = 0; i < size(); i++)
         result += std::to_string(this->operator[](i)) + sep;
