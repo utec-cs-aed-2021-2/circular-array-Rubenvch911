@@ -189,6 +189,7 @@ template<typename T>
 void CircularArray<T>::clear()
 {
     front=back=-1;
+    /*ACL: Se deben liberar los datos*/
 }
 
 template <class T>
@@ -272,10 +273,12 @@ void CircularArray<T>::reverse()
         indexf=next(indexf);
         indexb=prev(indexb);
     }
+    /*ACL: La idea original era devolver un nuevo Circular Array sin afectar el original*/
 }
 template<typename T>
 void CircularArray<T>::resize()
 {
+    /*ACL: Bien*/
     int newsz = capacity*2;
     T* newArr = new int[newsz];
     auto index=front;
