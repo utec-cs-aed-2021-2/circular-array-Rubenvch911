@@ -273,7 +273,6 @@ void CircularArray<T>::reverse()
         indexf=next(indexf);
         indexb=prev(indexb);
     }
-    /*ACL: La idea original era devolver un nuevo Circular Array sin afectar el original*/
 }
 template<typename T>
 void CircularArray<T>::resize()
